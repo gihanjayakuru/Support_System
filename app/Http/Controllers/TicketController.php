@@ -89,6 +89,17 @@ class TicketController extends Controller
         //
     }
 
+    public function search(Request $request)
+{
+    $ticket = Ticket::where('ref', $request->query('reference'))->first();
+
+    if ($ticket) {
+        return redirect(route('tickets.show', $ticket->id));
+    }
+
+    return redirect()->back()->with('error', 'Sorry! We could not find the ticket you are looking for. Please check the reference number.');
+}
+
     /**
      * Update the specified resource in storage.
      *
