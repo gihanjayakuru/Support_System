@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+amespace App\Listeners;
+
+use Mail;
+use App\Events\TicketCreated;
+use App\Mail\TicketCreated as NewTicketMail;
+
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;

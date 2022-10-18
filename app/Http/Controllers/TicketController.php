@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Events\TicketCreated;
 
 class TicketController extends Controller
 {
@@ -13,9 +14,46 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $tickets = Ticket::paginate($request->query('per_page', 10));
+        
+        // return view('tickets.index', [
+        //     'tickets' => $tickets,
+        // ]);
+
+
+        ///////////////////////////
+        $ticketsQuery = Ticket::query();
+
+        $q = $request->query('q');
+        $sortColumn = $request->query('sort', 'created_at');
+        $sortDir = $request->query('sort_dir') == 'asc' ? 'asc' : 'desc';
+        $sorttableColumns = [
+            'customer_name',
+            'created_at',
+            'updated_at',
+            'status',
+        ];
+
+        // Searching__
+        if($q){
+            $ticketsQuery->where('ref', 'LIKE', "%$q%")
+            ->orWhere('customer_name', 'LIKE', "%$q%")
+            ->orWhere('phone', 'LIKE', "%$q%")
+            ->orWhere('description', 'LIKE', "%$q%");
+        }
+
+        //Sorting.
+        if(in_array($sortColumn, $sorttableColumns)){
+            $ticketsQuery->orderBy($sortColumn, $sortDir);
+        }
+
+        $tickets = $ticketsQuery->paginate($request->query('per_page', 10));
+
+        return view('tickets.index',[
+            'tickets' => $tickets,
+        ]);
     }
 
     /**
@@ -55,7 +93,9 @@ class TicketController extends Controller
 
         if ($ticket->save()){
             //send mail
-            Mail::to($ticket->email)->send(new \App\Mail\TicketCreated($ticket));
+            // Mail::to($ticket->email)->send(new \App\Mail\TicketCreated($ticket));
+            \App\Events\TicketCreated::dispatch($ticket);
+
 
             return redirect(route('tickets.show', $ticket->id))
             ->with('success', 'Your ticket is created succesfully !. Please write down the reference number to check the ticket status later.');
@@ -109,7 +149,7 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        //
+        //__
     }
 
     /**
