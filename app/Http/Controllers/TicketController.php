@@ -54,6 +54,7 @@ class TicketController extends Controller
         return view('tickets.index',[
             'tickets' => $tickets,
         ]);
+
     }
 
     /**
@@ -96,7 +97,7 @@ class TicketController extends Controller
             // Mail::to($ticket->email)->send(new \App\Mail\TicketCreated($ticket));
             \App\Events\TicketCreated::dispatch($ticket);
 
-
+            
             return redirect(route('tickets.show', $ticket->id))
             ->with('success', 'Your ticket is created succesfully !. Please write down the reference number to check the ticket status later.');
 
