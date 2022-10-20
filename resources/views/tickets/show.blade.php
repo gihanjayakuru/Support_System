@@ -36,7 +36,7 @@
                 </div>
 
 
-                {{-- <div class="comments-container mt-3">
+                <div class="comments-container mt-3">
                     <div class="commments">
 
                     </div>
@@ -53,7 +53,7 @@
                             </div>
                         </form>
                     </div>
-                </div> --}}
+                </div>
                 @if ($ticket->comments->isNotEmpty())
                     <div class="comments">
                         @foreach ($ticket->comments as $comment)

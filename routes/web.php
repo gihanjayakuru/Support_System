@@ -43,4 +43,4 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() { // GROUP 1
     });
 });
 
-Route::resource('/tickets', 'App\Http\Controllers\TicketController');
+// Route::resource('/tickets', 'App\Http\Controllers\TicketController');
