@@ -94,8 +94,10 @@ class TicketController extends Controller
 
         if ($ticket->save()){
             //send mail
-            // Mail::to($ticket->email)->send(new \App\Mail\TicketCreated($ticket));
-            \App\Events\TicketCreated::dispatch($ticket);
+            Mail::to($ticket->email)->send(new \App\Mail\TicketCreated($ticket));
+            
+            // \App\Events\TicketCreated::dispatch($ticket);
+            
 
             
             return redirect(route('tickets.show', $ticket->id))
